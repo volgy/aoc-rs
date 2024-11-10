@@ -1,0 +1,11 @@
+[package]
+name = "y2023d08"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "y2023d08"
+path = "src/08.rs"
+
+[dependencies]
+aoclib = "0.2.1"

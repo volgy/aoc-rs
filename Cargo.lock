@@ -9,6 +9,51 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e8641208d3994f6429f6b93a2b173951a80fa0cce1f37cb004a8aca656671a7"
 
 [[package]]
+name = "autocfg"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
+
+[[package]]
+name = "counter"
+version = "0.5.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2d458e66999348f56fd3ffcfbb7f7951542075ca8359687c703de6500c1ddccd"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "either"
+version = "1.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
+
+[[package]]
+name = "itertools"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+dependencies = [
+ "either",
+]
+
+[[package]]
+name = "lazy_static"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
+
+[[package]]
+name = "num-traits"
+version = "0.2.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
 name = "y2022d01"
 version = "0.1.0"
 dependencies = [
@@ -17,6 +62,117 @@ dependencies = [
 
 [[package]]
 name = "y2022d02"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d01"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d02"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d03"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d04"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d05"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "itertools",
+]
+
+[[package]]
+name = "y2023d06"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d07"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "counter",
+ "itertools",
+ "lazy_static",
+]
+
+[[package]]
+name = "y2023d08"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d09"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d10"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d11"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "itertools",
+]
+
+[[package]]
+name = "y2023d12"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "itertools",
+]
+
+[[package]]
+name = "y2023d13"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d14"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2023d15"
 version = "0.1.0"
 dependencies = [
  "aoclib",
