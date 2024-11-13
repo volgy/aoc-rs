@@ -39,6 +39,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -62,6 +71,35 @@ dependencies = [
 
 [[package]]
 name = "y2022d02"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "itertools 0.13.0",
+]
+
+[[package]]
+name = "y2022d03"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2022d04"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2022d05"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2022d06"
 version = "0.1.0"
 dependencies = [
  "aoclib",
@@ -100,7 +138,7 @@ name = "y2023d05"
 version = "0.1.0"
 dependencies = [
  "aoclib",
- "itertools",
+ "itertools 0.12.1",
 ]
 
 [[package]]
@@ -116,7 +154,7 @@ version = "0.1.0"
 dependencies = [
  "aoclib",
  "counter",
- "itertools",
+ "itertools 0.12.1",
  "lazy_static",
 ]
 
@@ -146,7 +184,7 @@ name = "y2023d11"
 version = "0.1.0"
 dependencies = [
  "aoclib",
- "itertools",
+ "itertools 0.12.1",
 ]
 
 [[package]]
@@ -154,7 +192,7 @@ name = "y2023d12"
 version = "0.1.0"
 dependencies = [
  "aoclib",
- "itertools",
+ "itertools 0.12.1",
 ]
 
 [[package]]
