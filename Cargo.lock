@@ -24,6 +24,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "counter"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f009fcafa949dc1fc46a762dae84d0c2687d3b550906b633c4979d58d2c6ae52"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "either"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -106,6 +115,7 @@ name = "y2022d06"
 version = "0.1.0"
 dependencies = [
  "aoclib",
+ "counter 0.6.0",
 ]
 
 [[package]]
@@ -156,7 +166,7 @@ name = "y2023d07"
 version = "0.1.0"
 dependencies = [
  "aoclib",
- "counter",
+ "counter 0.5.7",
  "itertools 0.12.1",
  "lazy_static",
 ]
