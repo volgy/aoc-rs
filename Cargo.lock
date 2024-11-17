@@ -98,6 +98,7 @@ name = "y2022d05"
 version = "0.1.0"
 dependencies = [
  "aoclib",
+ "itertools 0.13.0",
 ]
 
 [[package]]
