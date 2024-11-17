@@ -1,3 +1,6 @@
 /target
 /.session
 **/[1-2]/out/
+
+# macOS
+.DS_Store
