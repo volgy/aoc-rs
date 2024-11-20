@@ -39,6 +39,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
 
 [[package]]
+name = "gcd"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d758ba1b47b00caf47f24925c0074ecb20d6dfcffe7f6d53395c0465674841a"
+
+[[package]]
 name = "itertools"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -145,6 +151,15 @@ name = "y2022d10"
 version = "0.1.0"
 dependencies = [
  "aoclib",
+]
+
+[[package]]
+name = "y2022d11"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "gcd",
+ "itertools 0.13.0",
 ]
 
 [[package]]
