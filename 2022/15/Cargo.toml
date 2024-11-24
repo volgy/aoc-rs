@@ -1,0 +1,12 @@
+[package]
+name = "y2022d15"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "y2022d15"
+path = "src/15.rs"
+
+[dependencies]
+aoclib = "0.2.1"
+regex = "1.11.1"
