@@ -260,6 +260,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2022d19"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
+name = "y2022d20"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
 name = "y2023d01"
 version = "0.1.0"
 dependencies = [
