@@ -281,6 +281,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2022d22"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "regex",
+]
+
+[[package]]
 name = "y2023d01"
 version = "0.1.0"
 dependencies = [
