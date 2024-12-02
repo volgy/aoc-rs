@@ -1,13 +1,16 @@
-use itertools::{multiunzip, Itertools};
+use itertools::Itertools;
 aoc::parts!(1, 2);
 
 fn parse(input: aoc::Input) -> (Vec<i32>, Vec<i32>) {
-    multiunzip(input.lines().map(|l| {
-        l.split_whitespace()
-            .map(|s| s.parse::<i32>().unwrap())
-            .collect_tuple()
-            .unwrap()
-    }))
+    input
+        .lines()
+        .map(|l| {
+            l.split_whitespace()
+                .map(|s| s.parse::<i32>().unwrap())
+                .collect_tuple()
+                .unwrap()
+        })
+        .unzip()
 }
 
 fn part_1(input: aoc::Input) -> impl ToString {
