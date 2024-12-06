@@ -1,5 +1,5 @@
 use itertools::iproduct;
-use std::collections::HashSet;
+use std::{collections::HashSet, hash::Hash};
 
 aoc::parts!(1, 2);
 
@@ -39,92 +39,94 @@ struct Guard {
     dir: Dir,
 }
 
-fn parse(input: aoc::Input) -> (Guard, (isize, isize), HashSet<Pos>) {
-    let mut guard_pos = None;
-    let mut obstacles = HashSet::new();
-    let (mut max_x, mut max_y) = (0, 0);
-
-    input.lines().enumerate().for_each(|(y, l)| {
-        l.chars().enumerate().for_each(|(x, ch)| {
-            let pos = (x as isize, y as isize);
-            max_x = max_x.max(pos.0);
-            max_y = max_y.max(pos.1);
-            match ch {
-                '#' => {
-                    obstacles.insert(pos);
-                    true
-                }
-                '^' => {
-                    guard_pos = Some(pos);
-                    true
-                }
-                _ => false,
-            };
-        });
-    });
-
-    (
-        Guard {
-            pos: guard_pos.unwrap(),
-            dir: Dir::Up,
-        },
-        (max_x, max_y),
-        obstacles,
-    )
+#[derive(Debug, Clone)]
+struct Lab {
+    max_x: isize,
+    max_y: isize,
+    obstacles: HashSet<Pos>,
+    guard: Guard,
 }
 
-fn part_1(input: aoc::Input) -> impl ToString {
-    let (mut guard, (max_x, max_y), obstacles) = parse(input);
-    let mut visited = HashSet::new();
+impl Lab {
+    fn parse(input: aoc::Input) -> Self {
+        let mut guard_pos = None;
+        let mut obstacles = HashSet::new();
+        let (mut max_x, mut max_y) = (0, 0);
 
-    while (0..=max_x).contains(&guard.pos.0) && (0..=max_y).contains(&guard.pos.1) {
-        visited.insert(guard.pos);
-        guard.pos = loop {
-            let next_pos = guard.dir.next(guard.pos);
-            if obstacles.contains(&next_pos) {
-                guard.dir = guard.dir.turn_right();
-            } else {
-                break next_pos;
-            }
+        input.lines().enumerate().for_each(|(y, l)| {
+            l.chars().enumerate().for_each(|(x, ch)| {
+                let pos = (x as isize, y as isize);
+                max_x = max_x.max(pos.0);
+                max_y = max_y.max(pos.1);
+                match ch {
+                    '#' => {
+                        obstacles.insert(pos);
+                        true
+                    }
+                    '^' => {
+                        guard_pos = Some(pos);
+                        true
+                    }
+                    _ => false,
+                };
+            });
+        });
+
+        Self {
+            max_x,
+            max_y,
+            obstacles,
+            guard: Guard {
+                pos: guard_pos.unwrap(),
+                dir: Dir::Up,
+            },
         }
     }
 
-    visited.len()
-}
-
-fn part_2(input: aoc::Input) -> impl ToString {
-    let (guard, (max_x, max_y), obstacles) = parse(input);
-    let mut n_obstacles = 0;
-
-    // Brute force is (borderline) feasible
-    for pos in iproduct!(0isize..=max_x, 0isize..=max_y) {
-        if guard.pos == pos || obstacles.contains(&pos) {
-            continue;
-        }
-
-        let mut guard = guard;
-        let mut obstacles = obstacles.clone();
-        obstacles.insert(pos);
-
+    fn get_out(&mut self) -> Option<HashSet<Pos>> {
         let mut states = HashSet::new();
-        let mut found_loop = false;
+        let mut visited = HashSet::new();
 
-        while (0..=max_x).contains(&guard.pos.0) && (0..=max_y).contains(&guard.pos.1) {
-            if !states.insert(guard) {
-                found_loop = true;
-                break;
+        while (0..=self.max_x).contains(&self.guard.pos.0)
+            && (0..=self.max_y).contains(&self.guard.pos.1)
+        {
+            if !states.insert(self.guard) {
+                return None;
             }
-            guard.pos = loop {
-                let next_pos = guard.dir.next(guard.pos);
-                if obstacles.contains(&next_pos) {
-                    guard.dir = guard.dir.turn_right();
+            visited.insert(self.guard.pos);
+            self.guard.pos = loop {
+                let next_pos = self.guard.dir.next(self.guard.pos);
+                if self.obstacles.contains(&next_pos) {
+                    self.guard.dir = self.guard.dir.turn_right();
                 } else {
                     break next_pos;
                 }
             };
         }
+        Some(visited)
+    }
+}
 
-        if found_loop {
+fn part_1(input: aoc::Input) -> impl ToString {
+    let mut lab = Lab::parse(input);
+    lab.get_out().unwrap().len()
+}
+
+fn part_2(input: aoc::Input) -> impl ToString {
+    let lab = Lab::parse(input);
+    let mut n_obstacles = 0;
+
+    let original_visited = lab.clone().get_out().unwrap();
+
+    // Brute force is (borderline) feasible
+    for pos in iproduct!(0isize..=lab.max_x, 0isize..=lab.max_y) {
+        if lab.guard.pos == pos || !original_visited.contains(&pos) {
+            continue;
+        }
+
+        let mut lab = lab.clone();
+        lab.obstacles.insert(pos);
+        if lab.get_out().is_none() {
             n_obstacles += 1;
         }
     }
