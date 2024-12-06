@@ -40,8 +40,7 @@ struct Guard {
 
 #[derive(Debug, Clone)]
 struct Lab {
-    max_x: isize,
-    max_y: isize,
+    max_pos: Pos,
     obstacles: HashSet<Pos>,
     guard: Guard,
 }
@@ -50,13 +49,12 @@ impl Lab {
     fn parse(input: aoc::Input) -> Self {
         let mut guard_pos = None;
         let mut obstacles = HashSet::new();
-        let (mut max_x, mut max_y) = (0, 0);
+        let mut max_pos = (0, 0);
 
         input.lines().enumerate().for_each(|(y, l)| {
             l.chars().enumerate().for_each(|(x, ch)| {
                 let pos = (x as isize, y as isize);
-                max_x = max_x.max(pos.0);
-                max_y = max_y.max(pos.1);
+                max_pos = (max_pos.0.max(pos.0), max_pos.1.max(pos.1));
                 match ch {
                     '#' => {
                         obstacles.insert(pos);
@@ -72,8 +70,7 @@ impl Lab {
         });
 
         Self {
-            max_x,
-            max_y,
+            max_pos,
             obstacles,
             guard: Guard {
                 pos: guard_pos.unwrap(),
@@ -86,8 +83,8 @@ impl Lab {
         let mut states = HashSet::new();
         let mut visited = HashSet::new();
 
-        while (0..=self.max_x).contains(&self.guard.pos.0)
-            && (0..=self.max_y).contains(&self.guard.pos.1)
+        while (0..=self.max_pos.0).contains(&self.guard.pos.0)
+            && (0..=self.max_pos.1).contains(&self.guard.pos.1)
         {
             if !states.insert(self.guard) {
                 return None;
