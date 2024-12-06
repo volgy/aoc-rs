@@ -451,5 +451,4 @@ name = "y2024d06"
 version = "0.1.0"
 dependencies = [
  "aoclib",
- "itertools 0.13.0",
 ]

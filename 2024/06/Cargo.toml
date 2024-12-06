@@ -9,4 +9,3 @@ path = "src/06.rs"
 
 [dependencies]
 aoclib = "0.2.1"
-itertools = "0.13.0"

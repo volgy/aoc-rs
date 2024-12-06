@@ -1,4 +1,3 @@
-use itertools::iproduct;
 use std::{collections::HashSet, hash::Hash};
 
 aoc::parts!(1, 2);
@@ -119,8 +118,8 @@ fn part_2(input: aoc::Input) -> impl ToString {
     let original_visited = lab.clone().get_out().unwrap();
 
     // Brute force is (borderline) feasible
-    for pos in iproduct!(0isize..=lab.max_x, 0isize..=lab.max_y) {
-        if lab.guard.pos == pos || !original_visited.contains(&pos) {
+    for pos in original_visited {
+        if lab.guard.pos == pos {
             continue;
         }
 
