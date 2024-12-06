@@ -113,22 +113,17 @@ fn part_1(input: aoc::Input) -> impl ToString {
 
 fn part_2(input: aoc::Input) -> impl ToString {
     let lab = Lab::parse(input);
-    let mut n_obstacles = 0;
 
-    let original_visited = lab.clone().get_out().unwrap();
+    let mut candidates = lab.clone().get_out().unwrap();
+    candidates.remove(&lab.guard.pos);
 
-    // Brute force is (borderline) feasible
-    for pos in original_visited {
-        if lab.guard.pos == pos {
-            continue;
-        }
-
-        let mut lab = lab.clone();
-        lab.obstacles.insert(pos);
-        if lab.get_out().is_none() {
-            n_obstacles += 1;
-        }
-    }
-
-    n_obstacles
+    // Brute force is feasible
+    candidates
+        .iter()
+        .filter(|&&pos| {
+            let mut lab = lab.clone();
+            lab.obstacles.insert(pos);
+            lab.get_out().is_none()
+        })
+        .count()
 }
