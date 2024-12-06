@@ -1,4 +1,4 @@
-use std::{collections::HashSet, sync::PoisonError};
+use std::collections::HashSet;
 
 use regex::Regex;
 
