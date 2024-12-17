@@ -20,6 +20,6 @@ fn part_1(input: aoc::Input) -> impl ToString {
     start_of_marker(input.raw(), 4)
 }
 
-fn part_2(input: aoc::Input) -> impl ToString {
-    start_of_marker(input.raw(), 14)
-}
+// fn part_2(input: aoc::Input) -> impl ToString {
+//     start_of_marker(input.raw(), 14)
+// }
