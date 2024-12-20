@@ -1,0 +1,13 @@
+[package]
+name = "y2024d19"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "y2024d19"
+path = "src/19.rs"
+
+[dependencies]
+aoclib = "0.2.1"
+itertools = "0.13.0"
+regex = "1.11.1"
