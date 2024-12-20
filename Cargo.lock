@@ -576,3 +576,10 @@ dependencies = [
  "itertools 0.13.0",
  "regex",
 ]
+
+[[package]]
+name = "y2024d20"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
