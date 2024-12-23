@@ -5,7 +5,7 @@ aoc::parts!(1);
 
 type Pos = (usize, usize);
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct KeyPad {
     buttons: HashMap<char, Pos>,
     current: char,
@@ -28,7 +28,7 @@ impl KeyPad {
         self.current = 'A';
     }
 
-    fn press(&mut self, button: char) -> String {
+    fn press(&mut self, button: char) -> Vec<String> {
         let src = self.buttons[&self.current];
         let dst = self.buttons[&button];
         let (dx, dy) = (
@@ -40,18 +40,23 @@ impl KeyPad {
             repeat_n(if delta > 0 { pos } else { neg }, delta.unsigned_abs())
         }
 
-        let horizontal = steps(dx, '>', '<');
-        let vertical = steps(dy, 'v', '^');
+        let horizontal: String = steps(dx, '>', '<').collect();
+        let vertical: String = steps(dy, 'v', '^').collect();
 
-        let moves = if self.buttons[&' '] == (src.0, dst.1) {
-            horizontal.chain(vertical)
-        } else {
-            vertical.chain(horizontal)
-        };
+        let avoid_pos = self.buttons[&' '];
 
         self.current = button;
 
-        moves.chain(['A']).collect()
+        if avoid_pos == (src.0, dst.1) || (dx * dy) == 0 {
+            vec![horizontal + &vertical + "A"]
+        } else if avoid_pos == (src.1, dst.0) {
+            vec![vertical + &horizontal + "A"]
+        } else {
+            vec![
+                horizontal.clone() + &vertical + "A",
+                vertical + &horizontal + "A",
+            ]
+        }
     }
 }
 
@@ -64,25 +69,30 @@ fn part_1(input: aoc::Input) -> impl ToString {
         KeyPad::new(&DIR_PAD),
     ];
 
-    let mut sum_complexity = 0;
-    for line in input.lines() {
-        let numeric: usize = line
-            .chars()
-            .filter(|c| c.is_ascii_digit())
-            .collect::<String>()
-            .parse()
-            .unwrap();
+    let mut keypad = KeyPad::new(&NUM_PAD);
+    dbg!(keypad.press('0'));
+    dbg!(keypad.press('2'));
+    dbg!(keypad.press('9'));
+    // let mut sum_complexity = 0;
+    // for line in input.lines() {
+    //     let numeric: usize = line
+    //         .chars()
+    //         .filter(|c| c.is_ascii_digit())
+    //         .collect::<String>()
+    //         .parse()
+    //         .unwrap();
 
-        let mut buttons = line.to_owned();
-        for keypad in keypads.iter_mut() {
-            keypad.reset();
-            buttons = buttons.chars().map(|b| keypad.press(b)).collect();
-        }
+    //     let mut buttons = line.to_owned();
+    //     for keypad in keypads.iter_mut() {
+    //         keypad.reset();
+    //         buttons = buttons.chars().map(|b| keypad.press(b)[0]).collect();
+    //     }
 
-        sum_complexity += numeric * buttons.len();
-    }
+    //     sum_complexity += numeric * buttons.len();
+    // }
 
-    sum_complexity
+    //sum_complexity
+    0
 }
 // fn part_2(input: aoc::Input) -> impl ToString {
 //     0
