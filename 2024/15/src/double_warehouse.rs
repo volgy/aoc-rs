@@ -1,10 +1,12 @@
+// The changes seem to be significant enough to warrant a copy & paste approach
 use super::{Dir, Pos};
 use std::collections::HashMap;
 
 #[derive(Debug, Clone, Copy)]
 enum Object {
     Wall,
-    Box,
+    LeftBox,
+    RightBox,
 }
 
 #[derive(Debug)]
@@ -21,17 +23,20 @@ impl Warehouse {
         let mut robot = None;
         for (y, line) in lines.by_ref().take_while(|l| !l.is_empty()).enumerate() {
             for (x, c) in line.chars().enumerate() {
-                let pos = (x, y);
+                let left_pos = (2 * x, y);
+                let right_pos = (2 * x + 1, y);
                 match c {
                     '#' => {
-                        objects.insert(pos, Object::Wall);
+                        objects.insert(left_pos, Object::Wall);
+                        objects.insert(right_pos, Object::Wall);
                     }
                     'O' => {
-                        objects.insert(pos, Object::Box);
+                        objects.insert(left_pos, Object::LeftBox);
+                        objects.insert(right_pos, Object::RightBox);
                     }
                     '.' => {}
                     '@' => {
-                        robot = Some(pos);
+                        robot = Some(left_pos);
                     }
                     _ => unreachable!(),
                 }
@@ -61,7 +66,7 @@ impl Warehouse {
         self.objects
             .iter()
             .filter_map(|(&pos, &object)| match object {
-                Object::Box => Some(pos),
+                Object::LeftBox => Some(pos),
                 _ => None,
             })
             .map(|(x, y)| x + 100 * y)
@@ -69,17 +74,52 @@ impl Warehouse {
     }
 
     fn make_room(&mut self, pos: Pos, dir: Dir) -> bool {
-        match self.objects.get(&pos) {
+        // this approach is highly inefficient (for transaction-like behavior), but it works
+        let mut temp_objects = self.objects.clone();
+        if Self::try_make_room(&mut temp_objects, pos, dir) {
+            self.objects = temp_objects;
+            true
+        } else {
+            false
+        }
+    }
+
+    fn try_make_room(temp_objects: &mut HashMap<Pos, Object>, pos: Pos, dir: Dir) -> bool {
+        match temp_objects.get(&pos) {
             Some(Object::Wall) => false,
-            Some(Object::Box) => {
+            Some(boxtype @ (Object::LeftBox | Object::RightBox)) => {
                 let (dx, dy) = dir.dxdy();
                 let new_pos = (pos.0.wrapping_add_signed(dx), pos.1.wrapping_add_signed(dy));
-                if self.make_room(new_pos, dir) {
-                    let object = self.objects.remove(&pos).unwrap();
-                    self.objects.insert(new_pos, object);
-                    true
+                if dir.is_horizontal() {
+                    if Self::try_make_room(temp_objects, new_pos, dir) {
+                        let object = temp_objects.remove(&pos).unwrap();
+                        temp_objects.insert(new_pos, object);
+                        true
+                    } else {
+                        false
+                    }
                 } else {
-                    false
+                    // vertical
+                    let peer_pos = match boxtype {
+                        Object::LeftBox => (pos.0 + 1, pos.1),
+                        Object::RightBox => (pos.0 - 1, pos.1),
+                        _ => unreachable!(),
+                    };
+                    let new_peer_pos = (
+                        peer_pos.0.wrapping_add_signed(dx),
+                        peer_pos.1.wrapping_add_signed(dy),
+                    );
+                    if Self::try_make_room(temp_objects, new_pos, dir)
+                        && Self::try_make_room(temp_objects, new_peer_pos, dir)
+                    {
+                        let object = temp_objects.remove(&pos).unwrap();
+                        temp_objects.insert(new_pos, object);
+                        let peer_object = temp_objects.remove(&peer_pos).unwrap();
+                        temp_objects.insert(new_peer_pos, peer_object);
+                        true
+                    } else {
+                        false
+                    }
                 }
             }
             None => true,
@@ -102,7 +142,9 @@ impl Warehouse {
         for dir in self.sequence.clone() {
             self.move_robot(dir);
             // debug trace
-            //println!("{:?}\n{}", dir, self.render());
+            // print!("\x1B[1;1H");
+            // println!("{:?}\n{}", dir, self.render());
+            // std::thread::sleep(std::time::Duration::from_millis(100));
         }
     }
 
@@ -117,8 +159,9 @@ impl Warehouse {
                 let pos = (x, y);
                 let ch = match self.objects.get(&pos) {
                     Some(Object::Wall) => '#',
-                    Some(Object::Box) => 'O',
-                    None => '.',
+                    Some(Object::LeftBox) => '[',
+                    Some(Object::RightBox) => ']',
+                    _ => '.',
                 };
                 if pos == self.robot {
                     buf.push('@');
