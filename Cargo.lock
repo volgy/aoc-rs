@@ -168,6 +168,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2021d04"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+ "itertools 0.14.0",
+]
+
+[[package]]
 name = "y2022d01"
 version = "0.1.0"
 dependencies = [
