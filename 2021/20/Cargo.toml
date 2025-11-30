@@ -1,0 +1,11 @@
+[package]
+name = "y2021d20"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "y2021d20"
+path = "src/20.rs"
+
+[dependencies]
+aoclib = "0.2.1"
