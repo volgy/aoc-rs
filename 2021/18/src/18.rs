@@ -5,9 +5,11 @@ use std::{
 };
 
 use aoc::IterUnwrap;
+use itertools::Itertools;
 
-aoc::parts!(1);
+aoc::parts!(1, 2);
 
+#[derive(Clone)]
 enum Element {
     Primitive(u8),
     Compound(Pair),
@@ -40,6 +42,7 @@ impl Display for Element {
     }
 }
 
+#[derive(Clone)]
 struct Pair {
     lhs: Box<Element>,
     rhs: Box<Element>,
@@ -53,6 +56,18 @@ impl Pair {
         let rhs = Box::new(Element::parse(chars));
         assert_eq!(chars.next_uw(), ']');
         Self { lhs, rhs }
+    }
+
+    fn magnitude(&self) -> u32 {
+        let lhs_mag = match self.lhs.as_ref() {
+            Element::Primitive(n) => *n as u32,
+            Element::Compound(p) => p.magnitude(),
+        };
+        let rhs_mag = match self.rhs.as_ref() {
+            Element::Primitive(n) => *n as u32,
+            Element::Compound(p) => p.magnitude(),
+        };
+        3 * lhs_mag + 2 * rhs_mag
     }
 
     fn reduce(&mut self) {
@@ -125,7 +140,7 @@ impl Pair {
         match self.lhs.as_mut() {
             Element::Primitive(n) if *n >= 10 => {
                 let left_val = *n / 2;
-                let right_val = (*n + 1) / 2;
+                let right_val = *n - left_val;
                 self.lhs = Box::new(Element::Compound(Pair {
                     lhs: Box::new(Element::Primitive(left_val)),
                     rhs: Box::new(Element::Primitive(right_val)),
@@ -144,7 +159,7 @@ impl Pair {
         match self.rhs.as_mut() {
             Element::Primitive(n) if *n >= 10 => {
                 let left_val = *n / 2;
-                let right_val = (*n + 1) / 2;
+                let right_val = *n - left_val;
                 self.rhs = Box::new(Element::Compound(Pair {
                     lhs: Box::new(Element::Primitive(left_val)),
                     rhs: Box::new(Element::Primitive(right_val)),
@@ -195,5 +210,15 @@ impl Sum for Pair {
 }
 
 fn part_1(input: aoc::Input) -> impl ToString {
-    input.lines().map(Pair::from).sum::<Pair>()
+    input.lines().map(Pair::from).sum::<Pair>().magnitude()
+}
+
+fn part_2(input: aoc::Input) -> impl ToString {
+    input
+        .lines()
+        .map(Pair::from)
+        .permutations(2)
+        .map(|pairs| pairs.into_iter().sum::<Pair>().magnitude())
+        .max()
+        .unwrap()
 }
