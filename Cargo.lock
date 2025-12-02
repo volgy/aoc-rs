@@ -837,3 +837,10 @@ dependencies = [
  "aoclib",
  "itertools 0.13.0",
 ]
+
+[[package]]
+name = "y2025d01"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
