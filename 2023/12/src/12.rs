@@ -1,6 +1,6 @@
-aoc::parts!(1);
+aoc::parts!(1, 2);
 
-use itertools::Itertools;
+use itertools::{intersperse, repeat_n, Itertools};
 
 #[derive(Debug)]
 struct Record {
@@ -13,6 +13,14 @@ impl Record {
         let (pattern_str, rle_str) = line.split_once(' ').unwrap();
         let pattern: Vec<_> = pattern_str.chars().collect();
         let rle: Vec<_> = rle_str.split(',').map(|s| s.parse().unwrap()).collect();
+        Self { pattern, rle }
+    }
+
+    fn unfold(&self) -> Self {
+        let pattern = intersperse(repeat_n(self.pattern.clone(), 5), vec!['?'])
+            .flatten()
+            .collect();
+        let rle = repeat_n(self.rle.clone(), 5).flatten().collect();
         Self { pattern, rle }
     }
 
@@ -65,6 +73,9 @@ fn part_1(input: aoc::Input) -> impl ToString {
         .sum::<usize>()
 }
 
-// fn part_2(input: aoc::Input) -> impl ToString {
-//     0
-// }
+fn part_2(input: aoc::Input) -> impl ToString {
+    input
+        .lines()
+        .map(|l| Record::parse(l).unfold().arrangements().len())
+        .sum::<usize>()
+}
