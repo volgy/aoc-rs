@@ -1,6 +1,7 @@
-aoc::parts!(1, 2);
+use itertools::{intersperse, repeat_n};
+use std::collections::HashMap;
 
-use itertools::{intersperse, repeat_n, Itertools};
+aoc::parts!(1, 2);
 
 #[derive(Debug)]
 struct Record {
@@ -24,58 +25,67 @@ impl Record {
         Self { pattern, rle }
     }
 
-    fn arrangements(&self) -> Vec<Vec<char>> {
-        let mut arrangements = vec![];
-        let n_wildcards = self.pattern.iter().filter(|c| **c == '?').count();
-        for comb in (0..n_wildcards)
-            .map(|_| ['.', '#'].iter())
-            .multi_cartesian_product()
-        {
-            let mut comb = comb.into_iter();
-            let arrangement: Vec<_> = self
-                .pattern
-                .iter()
-                .map(|c| if *c == '?' { *comb.next().unwrap() } else { *c })
-                .collect();
-            if Self::calc_rle(&arrangement) == self.rle {
-                arrangements.push(arrangement);
+    fn matches(&self) -> usize {
+        let mut cache = HashMap::new();
+
+        fn solve(
+            pattern: &[char],
+            rle: &[usize],
+            pi: usize,
+            ri: usize,
+            cache: &mut HashMap<(usize, usize), usize>,
+        ) -> usize {
+            if let Some(&result) = cache.get(&(pi, ri)) {
+                return result;
             }
-        }
-        arrangements
-    }
 
-    fn calc_rle(seq: &[char]) -> Vec<usize> {
-        let mut rle = vec![];
+            if ri == rle.len() {
+                let valid = pattern[pi..].iter().all(|&c| c != '#');
+                return if valid { 1 } else { 0 };
+            }
 
-        let mut count = 0;
-        for ch in seq {
-            match ch {
-                '#' => count += 1,
-                '.' if count == 0 => {}
-                '.' => {
-                    rle.push(count);
-                    count = 0;
+            if pi >= pattern.len() {
+                return 0;
+            }
+
+            let mut result = 0;
+            let group_len = rle[ri];
+
+            if pattern[pi] == '.' || pattern[pi] == '?' {
+                result += solve(pattern, rle, pi + 1, ri, cache);
+            }
+
+            if pattern[pi] == '#' || pattern[pi] == '?' {
+                if pi + group_len <= pattern.len() {
+                    let can_place = pattern[pi..pi + group_len].iter().all(|&c| c != '.');
+                    let followed_by_dot_or_end =
+                        pi + group_len == pattern.len() || pattern[pi + group_len] != '#';
+
+                    if can_place && followed_by_dot_or_end {
+                        let next_pi = (pi + group_len + 1).min(pattern.len());
+                        result += solve(pattern, rle, next_pi, ri + 1, cache);
+                    }
                 }
-                _ => panic!("invalid seq: {seq:?}"),
             }
+
+            cache.insert((pi, ri), result);
+            result
         }
-        if count != 0 {
-            rle.push(count);
-        }
-        rle
+
+        solve(&self.pattern, &self.rle, 0, 0, &mut cache)
     }
 }
 
 fn part_1(input: aoc::Input) -> impl ToString {
     input
         .lines()
-        .map(|l| Record::parse(l).arrangements().len())
+        .map(|l| Record::parse(l).matches())
         .sum::<usize>()
 }
 
 fn part_2(input: aoc::Input) -> impl ToString {
     input
         .lines()
-        .map(|l| Record::parse(l).unfold().arrangements().len())
+        .map(|l| Record::parse(l).unfold().matches())
         .sum::<usize>()
 }
