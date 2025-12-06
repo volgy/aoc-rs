@@ -642,6 +642,7 @@ name = "y2023d15"
 version = "0.1.0"
 dependencies = [
  "aoclib",
+ "regex",
 ]
 
 [[package]]
