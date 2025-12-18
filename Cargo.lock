@@ -1105,6 +1105,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "y2025d11"
+version = "0.1.0"
+dependencies = [
+ "aoclib",
+]
+
+[[package]]
 name = "z3"
 version = "0.19.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
